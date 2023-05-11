@@ -1,0 +1,7500 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Picture Dictionary V.23.5.8</title>
+    <style>
+      body {
+        background-color: none;
+        font-family: "NHHandwriting";
+      }
+
+      .outline {
+        background-color: orangered;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        min-width: 1000px;
+        display: grid;
+        grid-template-columns: 80% 20%;
+        grid-template-rows: 12% 88%;
+        background-image: url(images/PD.png);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+      .toolBar {
+        background-color: rgba(0, 255, 255, 0.3);
+        grid-column: 1/3;
+        grid-row: 1/2;
+        display: grid;
+        grid-template-columns: repeat(8, 12.5%);
+        min-width: 1000px;
+      }
+      .categories {
+        background-color: rgba(255, 0, 255, 0.3);
+        background-color: none;
+        grid-column: 2/3;
+        grid-row: 2/3;
+        display: grid;
+        overflow: scroll;
+      }
+      .output {
+        background-color: rgba(255, 255, 145, 0.3);
+        grid-column: 1/2;
+        grid-row: 2/3;
+
+        overflow: scroll;
+        display: grid;
+        grid-template-columns: repeat(5, 20%);
+      }
+      .searchInput {
+        height: 5vh;
+        width: 30vw;
+        min-width: 300px;
+        justify-self: center;
+        margin: 2vh 0px 0px 0px;
+        border: none;
+        box-shadow: none;
+        box-sizing: border-box;
+        border-top-right-radius: 3vh;
+        border-top-left-radius: 3vh;
+        border-bottom: 2px solid transparent;
+        border-image: linear-gradient(to right, red, blue);
+        border-image-slice: 1;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+      .buttonStyle {
+        height: 5vh;
+        line-height: 5vh;
+        width: 10vw;
+        min-width: 120px;
+        justify-self: center;
+        margin: 5px 0px 0px 0px;
+        border: 2px solid transparent;
+        box-shadow: 0px 0px 2px 2px purple;
+        box-sizing: border-box;
+        border-image: linear-gradient(to bottom right, red, blue);
+        border-image-slice: 1;
+        text-align: center;
+        background-image: none;
+        background-color: rgba(255, 255, 255, 0.8);
+        font-size: calc(2vh);
+        color: purple;
+        cursor: pointer;
+      }
+      .buttonStyle:hover {
+        transform: scale(1.1);
+      }
+
+      .backButton {
+        position: fixed;
+        top: 5vh;
+        right: 5vh;
+        margin: 0;
+      }
+      .dataDiv {
+        height: 15vh;
+        width: 10vw;
+        min-width: 100px;
+        justify-self: center;
+        margin: 2vh 0px 0px 0px;
+        border: 2px solid transparent;
+        box-shadow: 0px 0px 2px 2px purple;
+        box-sizing: border-box;
+        border-image: linear-gradient(to bottom right, orange, cyan);
+        border-image-slice: 1;
+        text-align: center;
+        background-image: none;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-color: white;
+        font-size: 0px;
+        color: purple;
+        cursor: pointer;
+        transition: all 0.3s ease-in;
+      }
+      .dataHover:hover {
+        transform: scale(1.5);
+        background-size: 100% 70%;
+        font-size: 1vh;
+        padding: 11vh 0px 0px 0px;
+      }
+
+      .categoryDiv {
+        height: 4vh;
+        width: 96%;
+        min-width: 100px;
+        justify-self: center;
+        margin: 1vh 0px 0px 0px;
+        border: 2px solid transparent;
+        box-shadow: 0px 0px 2px 2px black;
+        box-sizing: border-box;
+        border-image: linear-gradient(to bottom right, green, yellow);
+        border-image-slice: 1;
+        text-align: center;
+        background-color: white;
+        font-size: calc(2vh);
+        color: black;
+        cursor: pointer;
+        transition: all 0.3s ease-in;
+      }
+      .modal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        padding-bottom: 100px;
+        display: none;
+      }
+
+      .dartTarget {
+        height: 700px;
+        width: 700px;
+        position: absolute;
+        background-color: blue;
+        background-image: url(images/dartTarget8.PNG);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      .sugurokuTarget {
+        height: 800px;
+        width: 1000px;
+        position: absolute;
+        background-color: blue;
+        background-image: url(images/suguroku.JPG);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .dart {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 120px;
+        width: 120px;
+        background-color: blue;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        border: 2px solid black;
+      }
+      .dart2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 130px;
+        width: 130px;
+        background-color: blue;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        border: 2px solid black;
+      }
+      .suguroku {
+        height: 80px;
+        width: 80px;
+        background-color: none;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        border: 2px solid transparent;
+        position: absolute;
+      }
+      .battleShipToolBar {
+        display: grid;
+        grid-template-columns: repeat(8, auto);
+      }
+      .battleField {
+        height: 500px;
+        width: 500px;
+        position: absolute;
+        top: 250px;
+        left: 100px;
+        border: 5px solid black;
+        margin: 0px 0px 50px 0px;
+        display: grid;
+        grid-template-columns: repeat(5, 100px);
+      }
+      .battleFieldCard {
+        height: 100px;
+        width: 100px;
+        background-color: white;
+        border: 1px solid black;
+        box-sizing: border-box;
+        background-image: url(images/.PNG);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      .game {
+        height: 720px;
+        border: 4px solid black;
+        border-radius: 8px;
+        width: 720px;
+        margin-left: 20px;
+        margin-top: 0px;
+        box-sizing: border-box;
+        background-color: white;
+        display: grid;
+        grid-gap: 0px;
+        overflow: hidden;
+        padding: 0px 10px 0px 10px;
+      }
+
+      .game div {
+        border: 1px solid white;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .answerBox {
+        height: 172px;
+        border: 4px solid black;
+        border-radius: 16px;
+        width: 720px;
+        margin-left: 20px;
+        margin-top: 10px;
+        box-sizing: border-box;
+        background-color: #fff;
+        display: grid;
+        grid-template-columns: repeat(5, 20%);
+        justify-content: center;
+        grid-gap: 2px;
+        overflow: hidden;
+        padding: 10px;
+      }
+
+      .answerBox p {
+        font-size: 14px;
+        justify-self: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      .game2 {
+        height: 720px;
+        border: 4px solid black;
+        border-radius: 8px;
+        width: 720px;
+        margin-left: 20px;
+        margin-top: 20px;
+        box-sizing: border-box;
+        background-color: white;
+        display: grid;
+        grid-gap: 0px;
+        overflow: hidden;
+        padding: 0px 10px 0px 10px;
+      }
+
+      .game2 div {
+        border: 1px solid white;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .answerBox2 {
+        height: 172px;
+        border: 4px solid black;
+        border-radius: 16px;
+        width: 720px;
+        margin-left: 20px;
+        margin-top: 10px;
+        box-sizing: border-box;
+        background-color: #fff;
+        display: grid;
+        grid-template-columns: repeat(5, 20%);
+        justify-content: center;
+        grid-gap: 2px;
+        overflow: hidden;
+        padding: 10px;
+      }
+
+      .answerBox2 p {
+        height: 20px;
+        font-size: 14px;
+        justify-self: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      .boxes {
+        display: grid;
+        grid-template-columns: 245px 245px 245px;
+        grid-gap: 5px;
+        margin-top: 10px;
+      }
+      .boxOutline {
+        position: absolute;
+        background-color: none;
+        left: 0;
+        top: 0;
+        width: 752px;
+        height: 1075px;
+        border: 2px solid black;
+        box-sizing: border-box;
+        border-radius: 8px;
+      }
+      .box {
+        width: 230px;
+        height: 260px;
+        border: 4px solid black;
+        border-radius: 24px;
+        box-sizing: border-box;
+        justify-self: center;
+        overflow: hidden;
+      }
+      .box img {
+        width: 100%;
+        height: 100%;
+      }
+
+      @media print {
+        .backButton {
+          visibility: hidden;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="modal"></div>
+
+    <script>
+      let body = document.querySelector("body");
+
+      let isOutline = false;
+
+      let outline = document.createElement("div");
+
+      outline.classList.add("outline");
+      let toolBar = document.createElement("div");
+      toolBar.classList.add("toolBar");
+      outline.appendChild(toolBar);
+      let output = document.createElement("div");
+      output.classList.add("output");
+      outline.appendChild(output);
+      let categoryOutput = document.createElement("div");
+      categoryOutput.classList.add("categories");
+      outline.appendChild(categoryOutput);
+
+      const toggleOutline = () => {
+        if (isOutline) {
+          body.removeChild(outline);
+          isOutline = false;
+        } else {
+          body.appendChild(outline);
+          isOutline = true;
+        }
+      };
+      toggleOutline();
+
+      const buttonReturner = (buttonName, buttonHTML) => {
+        let button = document.createElement("div");
+        button.classList.add("buttonStyle");
+        button.classList.add(buttonName);
+        button.innerHTML = buttonHTML;
+        toolBar.appendChild(button);
+
+        return button;
+      };
+
+      const cutoutsButton = buttonReturner("cutoutsButton", "Cutouts");
+      const battleShipButton = buttonReturner("battleShipButton", "Battleship");
+      const bingoButton = buttonReturner("bingoButton", "Bingo");
+      const dartsButton = buttonReturner("dartsButton", "Darts");
+      const sugurokuButton = buttonReturner("sugurokuButton", "Sugoroku");
+      const connectFourButton = buttonReturner(
+        "connectFourButton",
+        "Connect 4"
+      );
+      const wordSearchButton = buttonReturner(
+        "wordSearchButton",
+        "Word Search"
+      );
+      const cardsButton = buttonReturner("cardsButton", "Cards");
+      const AorBButton = buttonReturner("AorBButton", "A or B");
+      const guessWhoButton = buttonReturner("guessWhoButton", "Guess Who");
+      const modal = document.querySelector(".modal");
+
+      const sourceFile = `url(file://svfile01/00%E5%85%B1%E6%9C%89/%E6%A0%A1%E5%8B%99/00%E5%85%B1%E6%9C%89/20%E5%AD%A6%E6%A0%A1%E6%95%99%E8%82%B2%E8%AA%B2/00AET/03Shared%20Resources/05ES%20Resources/Textbook%20Materials/NewHorizonElementary/FC%20Pictures/`;
+      const sourceFromFile = `url(../../03Shared%20Resources/05ES%20Resources/Textbook%20Materials/NewHorizonElementary/FC%20Pictures/`;
+      const categories = [];
+      const categoriesState = [];
+
+      const sortHandler = (array) => {
+        array.sort((a, b) => {
+          if (a.word < b.word) {
+            return -1;
+          }
+          if (a.word > b.word) {
+            return 1;
+          }
+          return 0;
+        });
+      };
+
+      let isCutouts = false;
+      cutoutsButton.addEventListener("click", (e) => {
+        isCutouts = !isCutouts;
+        e.target.style.backgroundColor = isCutouts ? "lightgreen" : "salmon";
+        render();
+      });
+
+      const render = () => {
+        output.innerHTML = "";
+        vocabularyData.map((e) => {
+          if (checkIfCategoryIsOn(e) || e.selected) {
+            createDataDivs(e);
+          }
+        });
+      };
+
+      const vocabularyData = [
+        {
+          word: `fine`,
+          Japanese: `元気な`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `good`,
+          Japanese: `良い`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `great`,
+          Japanese: `素晴らしい`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `happy`,
+          Japanese: `幸せな`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `sad`,
+          Japanese: `悲しい`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `tired`,
+          Japanese: `疲れた`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `sleepy`,
+          Japanese: `眠い`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `busy`,
+          Japanese: `忙しい`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `hungry`,
+          Japanese: `空腹な`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `thirsty`,
+          Japanese: `のどがかわいた`,
+          category: `feel 気分`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `0`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `1`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `2`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `3`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `4`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `5`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `6`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `7`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `8`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `9`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `10`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `11`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `12`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `13`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `14`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `15`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `16`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `17`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `18`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `19`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `20`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `21`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `22`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `23`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `24`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `25`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `26`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `27`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `28`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `29`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `30`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `40`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `50`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `60`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `70`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `80`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `90`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+        {
+          word: `100`,
+          Japanese: ``,
+          category: `numbers 数`,
+          page: 4,
+          selected: false,
+        },
+
+        {
+          word: `sunny`,
+          Japanese: `晴れている`,
+          category: `weather 天気`,
+          page: 5,
+          selected: false,
+        },
+        {
+          word: `cloudy`,
+          Japanese: `くもった`,
+          category: `weather 天気`,
+          page: 5,
+          selected: false,
+        },
+        {
+          word: `rainy`,
+          Japanese: `雨がふっている`,
+          category: `weather 天気`,
+          page: 5,
+          selected: false,
+        },
+        {
+          word: `snowy`,
+          Japanese: `雪がふっている`,
+          category: `weather 天気`,
+          page: 5,
+          selected: false,
+        },
+        {
+          word: `cold`,
+          Japanese: `寒い`,
+          category: `weather 天気`,
+          page: 5,
+          selected: false,
+        },
+        {
+          word: `hot`,
+          Japanese: `暑い`,
+          category: `weather 天気`,
+          page: 5,
+          selected: false,
+        },
+        {
+          word: `black`,
+          Japanese: `黒`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `blue`,
+          Japanese: `青`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `brown`,
+          Japanese: `茶`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `green`,
+          Japanese: `緑`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+
+        {
+          word: `orange`,
+          Japanese: `だいだい`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `pink`,
+          Japanese: `もも色`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `purple`,
+          Japanese: `むらさき`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `red`,
+          Japanese: `赤`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `white`,
+          Japanese: `白`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `yellow`,
+          Japanese: `黄`,
+          category: `colors 色`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `circle`,
+          Japanese: `丸`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `cross`,
+          Japanese: `十字`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `diamond`,
+          Japanese: `ダイヤモンド`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `heart`,
+          Japanese: `ハート`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `rectangle`,
+          Japanese: `長方形`,
+          category: `shapes 形`,
+          page: 6,
+        },
+        {
+          word: `square`,
+          Japanese: `四角`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `star`,
+          Japanese: `星`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `triangle`,
+          Japanese: `三角`,
+          category: `shapes 形`,
+          page: 6,
+          selected: false,
+        },
+        {
+          word: `softball`,
+          Japanese: `ソフトボール`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `basketball`,
+          Japanese: `バスケットボール`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `volleyball`,
+          Japanese: `バレーボール`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `dodgeball`,
+          Japanese: `ドッジボール`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `soccer`,
+          Japanese: `サッカー`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `tennis`,
+          Japanese: `テニス`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `table tennis`,
+          Japanese: `卓球`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `badminton`,
+          Japanese: `バドミントン`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `track and field`,
+          Japanese: `陸上`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `swimming`,
+          Japanese: `水泳`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `skating`,
+          Japanese: `スケート`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `skiing`,
+          Japanese: `スキー`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `baseball`,
+          Japanese: `野球`,
+          category: `sports スポーツ`,
+          page: 7,
+          selected: false,
+        },
+        {
+          word: `bread`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `curry and rice`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `French fries`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `fried chicken`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `grilled fish`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `hamburger`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `hot dog`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `omelet`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `pancakes`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `pie`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `pizza`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `rice ball`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `rice`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `salad`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `sandwich`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `sausage`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `soup`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `spaghetti`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `steak`,
+          Japanese: ``,
+          category: `food 食べ物`,
+          page: 8,
+          selected: false,
+        },
+        {
+          word: `cake`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `chocolate`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `ice cream`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `parfait`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `popcorn`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `pudding`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `shaved ice`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `snack food`,
+          Japanese: ``,
+          category: `desert デザート`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `coffee`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `green tea`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `milk`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `mineral water`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `orange juice`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `soda`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `tea`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `water`,
+          Japanese: ``,
+          category: `drinks 飲み物`,
+          page: 9,
+          selected: false,
+        },
+        {
+          word: `apple`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `banana`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `bean`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `broccoli`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `cabbage`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `carrot`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `cherry`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `corn`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `cucumber`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `eggplant`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `grapes`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `green pepper`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `kiwi fruit`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `lemon`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `lettuce`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `melon`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `mushroom`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `nut`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `onion`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `orange`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `peach`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `pineapple`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `potato`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+
+        {
+          word: `spinach`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `strawberry`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `tomato`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `watermelon`,
+          Japanese: ``,
+          category: `fruits vegetables 果物 野菜`,
+          page: 10,
+          selected: false,
+        },
+        {
+          word: `bacon`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `beef`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `cheese`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `chicken`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `egg`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `fish`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `ham`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `octopus`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `pork`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `salmon`,
+          Japanese: ``,
+          category: `ingredients 食材`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `breakfast`,
+          Japanese: ``,
+          category: `meals 食事`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `dinner`,
+          Japanese: ``,
+          category: `meals 食事`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `lunch`,
+          Japanese: ``,
+          category: `meals 食事`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `bitter`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `cold`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `delicious`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `hard`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `hot`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `salty`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `soft`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `sour`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `spicy`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `sweet`,
+          Japanese: ``,
+          category: `tastes 味など`,
+          page: 11,
+          selected: false,
+        },
+        {
+          word: `bear`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `bird`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `camel`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `cat`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `cow`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `dog`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `eagle`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `elephant`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `frog`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `gorilla`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `horse`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `koala`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `lion`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `monkey`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `mouse`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `panda`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `penguin`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `pig`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `polar bear`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `rabbit`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `sheep`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `snake`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `tiger`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `zebra`,
+          Japanese: ``,
+          category: `animals 動物`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `desert`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `flower`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `forest`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `island`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `lake`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `mountain`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `pond`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `sea`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `tree`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `wetlands`,
+          Japanese: ``,
+          category: `nature 自然`,
+          page: 12,
+          selected: false,
+        },
+        {
+          word: `ant`,
+          Japanese: ``,
+          category: `bugs 虫`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `butterfly`,
+          Japanese: ``,
+          category: `bugs 虫`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `grasshopper`,
+          Japanese: ``,
+          category: `bugs 虫`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `spider`,
+          Japanese: ``,
+          category: `bugs 虫`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `dolphin`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `fish`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `jellyfish`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `sea turtle`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `shark`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `shrimp`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `squid`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `whale`,
+          Japanese: ``,
+          category: `sea animals 海の生き物`,
+          page: 13,
+          selected: false,
+        },
+        {
+          word: `first`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `second`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `third`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `fourth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `fifth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `sixth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `seventh`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `eighth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `ninth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `tenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `eleventh`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twelfth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `thirteenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `fourteenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `fifteenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `sixteenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `seventeenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `eighteenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `nineteenth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twentieth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-first`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-second`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-third`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-fourth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-fifth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-sixth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-seventh`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-eighth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `twenty-ninth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `thirtieth`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `thirty-first`,
+          Japanese: ``,
+          category: `dates 日付`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `January`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `February`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `March`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `April`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `May`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `June`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `July`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `August`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `September`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `October`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `November`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `December`,
+          Japanese: ``,
+          category: `months 月`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `spring`,
+          Japanese: ``,
+          category: `seasons 季節`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `summer`,
+          Japanese: ``,
+          category: `seasons 季節`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `fall`,
+          Japanese: ``,
+          category: `seasons 季節`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `winter`,
+          Japanese: ``,
+          category: `seasons 季節`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `morning`,
+          Japanese: ``,
+          category: `time of day 一日の時間`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `afternoon`,
+          Japanese: ``,
+          category: `time of day 一日の時間`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `evening`,
+          Japanese: ``,
+          category: `time of day 一日の時間`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `night`,
+          Japanese: ``,
+          category: `time of day 一日の時間`,
+          page: 14,
+          selected: false,
+        },
+        {
+          word: `Sunday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `Monday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `Tuesday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `Wednesday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `Thursday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `Friday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `Saturday`,
+          Japanese: ``,
+          category: `days 曜日`,
+          page: 15,
+          selected: false,
+        },
+        {
+          word: `America`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Australia`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Brazil`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Canada`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `China`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Egypt`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `France`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Germany`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Ghana`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `India`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Italy`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Japan`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Kenya`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Korea`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Mongolia`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Morocco`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Norway`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Peru`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Russia`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Singapore`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Spain`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Sweden`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Thailand`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Turkey`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `U.K.`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `Vietnam`,
+          Japanese: ``,
+          category: `countries 国`,
+          page: 16,
+          selected: false,
+        },
+        {
+          word: `grandfather`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `grandmother`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `father`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `mother`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `brother`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `me`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `sister`,
+          Japanese: ``,
+          category: `family 家族`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `boy`,
+          Japanese: ``,
+          category: `people 人`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `girl`,
+          Japanese: ``,
+          category: `people 人`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `friends`,
+          Japanese: ``,
+          category: `people 人`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `classmates`,
+          Japanese: ``,
+          category: `people 人`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `active`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `brave`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `friendly`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `funny`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `gentle`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `kind`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+
+        {
+          word: `strong`,
+          Japanese: ``,
+          category: `character 性格など`,
+          page: 17,
+          selected: false,
+        },
+        {
+          word: `sing`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `run`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `jump`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `dance`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `swim`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `skate`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `go`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `stop`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `turn`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `eat`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `drink`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `cook`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `bake`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `clean`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `buy`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `ride`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `travel`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `study`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `teach`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `speak`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `listen`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `read`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `write`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `talk`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `draw`,
+          Japanese: ``,
+          category: `motion 動作など（１）`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `went`,
+          Japanese: ``,
+          category: `past したこと`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `ate`,
+          Japanese: ``,
+          category: `past したこと`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `saw`,
+          Japanese: ``,
+          category: `past したこと`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `enjoyed`,
+          Japanese: ``,
+          category: `past したこと`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `had`,
+          Japanese: ``,
+          category: `past したこと`,
+          page: 18,
+          selected: false,
+        },
+        {
+          word: `like`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `want`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `look`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `see`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `play`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `practice`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `try`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `enjoy`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `get`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `have`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `make`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `help`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `join`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `live`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `think`,
+          Japanese: ``,
+          category: `motion 動作など（２）`,
+          page: 19,
+          selected: false,
+        },
+        {
+          word: `get up`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `brush my teeth`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `take out the garbage`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `get the newspaper`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `have breakfast`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `go to school`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `study English`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `have lunch`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `go home`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `play soccer`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `walk my dog`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `do my homework`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `have dinner`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `wash the dishes`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `take a bath`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `watch TV`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `go to bed`,
+          Japanese: ``,
+          category: `daily life 一日の生活`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `always`,
+          Japanese: ``,
+          category: `frequency 頻度`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `usually`,
+          Japanese: ``,
+          category: `frequency 頻度`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `sometimes`,
+          Japanese: ``,
+          category: `frequency 頻度`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `never`,
+          Japanese: ``,
+          category: `frequency 頻度`,
+          page: 20,
+          selected: false,
+        },
+        {
+          word: `T-shirt`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `shirt`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `vest`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `sweater`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `uniform`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `pants`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `cap`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `hat`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `gloves`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `socks`,
+          Japanese: ``,
+          category: `clothes 衣類`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `head`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `face`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `shoulder`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `hand`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `knee`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `eye`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `ear`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `nose`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `mouth`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `teeth`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `leg`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `toe`,
+          Japanese: ``,
+          category: `body からだ`,
+          page: 21,
+          selected: false,
+        },
+        {
+          word: `amusement park`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `aquarium`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `bookstore`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `bridge`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `bus stop`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `castle`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `city hall`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `convenience store`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `department store`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `elementary school`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `fire station`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `flower shop`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `gas station`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `hospital`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `house`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `junior high school`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `library`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `museum`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `park`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `police station`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `post office`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `restaurant`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `shrine`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `stadium`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `station`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `street`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `supermarket`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `temple`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `zoo`,
+          Japanese: ``,
+          category: `buildings 建物など`,
+          page: 22,
+          selected: false,
+        },
+        {
+          word: `go`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `straight`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `turn`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `right`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `left`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `block`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `see`,
+          Japanese: ``,
+          category: `directions 道案内`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `by`,
+          Japanese: ``,
+          category: `positions 位置`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `in`,
+          Japanese: ``,
+          category: `positions 位置`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `on`,
+          Japanese: ``,
+          category: `positions 位置`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `under`,
+          Japanese: ``,
+          category: `positions 位置`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `bus`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `car`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `taxi`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `truck`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `train`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `subway`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `ship`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `boat`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `airplane`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `bike`,
+          Japanese: ``,
+          category: `vehicles 乗り物`,
+          page: 23,
+          selected: false,
+        },
+        {
+          word: `English`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `Japanese`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `calligraphy`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `social studies`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `math`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `science`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `music`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `arts and crafts`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `home economics`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `PE`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `moral education`,
+          Japanese: ``,
+          category: `subjects 教科`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `classroom`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `library`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `music room`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `gym`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `playground`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `swimming pool`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `teachers office`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `school nurses office`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `school principals office`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `entrance`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `restroom`,
+          Japanese: ``,
+          category: `school 学校`,
+          page: 24,
+          selected: false,
+        },
+        {
+          word: `crayon`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `marker`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `pen`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `pencil`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `pencil case`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `pencil sharpener`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `eraser`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `ruler`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `glue`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `scissors`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `stapler`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `notebook`,
+          Japanese: ``,
+          category: `stationery 文房具`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `recorder`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+
+        {
+          word: `harmonica`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `triangle`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `piano`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `guitar`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `violin`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `drum`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+        {
+          word: `xylophone`,
+          Japanese: ``,
+          category: `musical instruments 楽器`,
+          page: 25,
+          selected: false,
+        },
+
+        {
+          word: `bag`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `ball`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `basket`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `bat`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `bath`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `bed`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `book`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `box`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `calendar`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `chair`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `clock`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `comic book`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `computer`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `cup`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `desk`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `map`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `picture`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `plastic bag`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `present`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `racket`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `table`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `textbook`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `treasure`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `umbrella`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `wall`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `watch`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `wheelchair`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `window`,
+          Japanese: ``,
+          category: `everyday life 日常生活`,
+          page: 26,
+          selected: false,
+        },
+        {
+          word: `camping`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `fishing`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `hiking`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `shopping`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `reading`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `running`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `jogging`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `kite flying`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `top spinning`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `cards`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `rock, paper, scissors`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `jump rope`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `unicycle`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `tag`,
+          Japanese: ``,
+          category: `games 遊びなど`,
+          page: 27,
+          selected: false,
+        },
+        {
+          word: `field trip`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `school trip`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `chorus contest`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `drama festival`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `music festival`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `school festival`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `volunteer day`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `sports day`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `swimming meet`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `fire drill`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `summer vacation`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `entrance ceremony`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `graduation ceremony`,
+          Japanese: ``,
+          category: `school events 学校行事`,
+          page: 28,
+          selected: false,
+        },
+
+        {
+          word: `birthday`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `New Years Day`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `Dolls Festival`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `April Fools Day`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `Childrens Day`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `Star Festival`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `fireworks`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `Halloween`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `Christmas`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `New Years Eve`,
+          Japanese: ``,
+          category: `yearly events 年中行事`,
+          page: 28,
+          selected: false,
+        },
+        {
+          word: `good`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `great`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `nice`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `fantastic`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `wonderful`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `beautiful`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `cool`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `cute`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `favorite`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `interesting`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `exciting`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `famous`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `popular`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `international`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `fun`,
+          Japanese: ``,
+          category: `appearance 様子`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `big`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `small`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `long`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `short`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `new`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `old`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `easy`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `difficult`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `same`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `different`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `fast`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `slow`,
+          Japanese: ``,
+          category: `status 状態`,
+          page: 29,
+          selected: false,
+        },
+        {
+          word: `artist`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `musician`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `singer`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `comedian`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `doctor`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `nurse`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `dentist`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `vet`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `zookeeper`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `cook`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `baker`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `florist`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `farmer`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `police officer`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `fire fighter`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `pilot`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `flight attendant`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `bus driver`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `astronaut`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `teacher`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `scientist`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `programmer`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `baseball player`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `soccer player`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `figure skater`,
+          Japanese: ``,
+          category: `jobs 職業`,
+          page: 30,
+          selected: false,
+        },
+        {
+          word: `baseball team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `softball team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `basketball team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `volleyball team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `soccer team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `tennis team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `table tennis team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `badminton team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `track and field team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `gymnastics team`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `art club`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `drama club`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `broadcasting club`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `cooking club`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `newspaper club`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `photography club`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `brass band`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `chorus`,
+          Japanese: ``,
+          category: `club activities 部活動`,
+          page: 31,
+          selected: false,
+        },
+        {
+          word: `a`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `b`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `c`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `d`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `e`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `f`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `g`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `h`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `i`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `j`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `k`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `l`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `m`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `n`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `o`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `p`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `q`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `r`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `s`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `t`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `u`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `v`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `w`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `x`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `y`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `z`,
+          Japanese: ``,
+          category: `lowercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `A`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `B`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `C`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `D`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `E`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `F`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `G`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `H`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `I`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `J`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `K`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `L`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `M`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `N`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `O`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `P`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `Q`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `R`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `S`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `T`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `U`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `V`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `W`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `X`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `Y`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `Z`,
+          Japanese: ``,
+          category: `uppercase`,
+          page: 0,
+          selected: false,
+        },
+        {
+          word: `alligator`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `alligator2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `ant`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `apple`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `ball`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `bear`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `box`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `can`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `car`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `castle`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `cat`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `cat2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `cloud`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `dinosaur`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `dog`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `donut`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `duck`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `duck2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `eat`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `egg`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `eggplant`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `elephant`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `exit`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `fan`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `finger`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `fish`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `foot`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `girl`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `goat`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `gorilla`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `hamburger`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `hat`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `hat2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `hippo`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `house`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `igloo`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `iguana`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `ink`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `insect`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `insect2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `jam`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `jellyfish`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `jet`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `jump`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `kangaroo`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `key`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `king`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `kite`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `koala`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `lamp`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `lamp2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `lemon`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `lion`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `lion2`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `orange`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `present`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `queen`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `rabbit`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `right`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `strawberry`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `umbrella`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+        {
+          word: `violin`,
+          Japanese: ``,
+          category: `phonics`,
+          page: 98,
+          selected: false,
+        },
+
+        {
+          word: `swimming`,
+          Japanese: ``,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+        {
+          word: `cleaning`,
+          Japanese: ``,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+        {
+          word: `studying`,
+          Japanese: ``,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+        {
+          word: `talking`,
+          Japanese: ``,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+        {
+          word: `noodle`,
+          Japanese: `麺`,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+        {
+          word: `I`,
+          Japanese: ``,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+        {
+          word: `on`,
+          Japanese: ``,
+          category: `special`,
+          page: 99,
+          selected: false,
+        },
+      ];
+
+      const checkCategories = () => {
+        vocabularyData.forEach(({ category }) => {
+          if (!categories.includes(category)) {
+            categories.push(category);
+          }
+        });
+        categories.forEach((e) => {
+          categoriesState.push({
+            category: e,
+            isOn: false,
+          });
+        });
+      };
+      checkCategories();
+
+      const checkIfCategoryIsOn = ({ category }) => {
+        let result;
+        categoriesState.forEach((e) => {
+          if (e.category === category) {
+            result = e.isOn;
+          }
+        });
+        return result;
+      };
+
+      const createDataDivs = ({ word, category, Japanese, page, selected }) => {
+        let div = document.createElement("div");
+        div.classList.add("dataDiv");
+        div.classList.add("dataHover");
+        div.innerHTML = Japanese;
+
+        let newCat = category.replaceAll(" ", "%20");
+        let newWord = word.replaceAll(" ", "%20");
+        newWord = newWord.replaceAll("'", "");
+        //console.log("url("+page+"%20" +newCat+ "/"+newWord+".PNG)")
+
+        let backgroundSource = isCutouts
+          ? "url(" + page + "%20" + newCat + "/cutouts/" + newWord + ".PNG)"
+          : "url(" + page + "%20" + newCat + "/" + newWord + ".PNG)";
+
+        div.style.backgroundImage = backgroundSource;
+
+        if (selected) {
+          div.style.borderImage = "none";
+          div.style.border = "4px solid black";
+          div.style.boxShadow = "0px 0px 2px 2px black";
+        }
+        output.appendChild(div);
+
+        div.addEventListener("click", () => {
+          div.innerHTML = div.innerHTML === Japanese ? page : Japanese;
+          //let redirection = `file://svfile01/00%E5%85%B1%E6%9C%89/%E6%A0%A1%E5%8B%99/00%E5%85%B1%E6%9C%89/20%E5%AD%A6%E6%A0%A1%E6%95%99%E8%82%B2%E8%AA%B2/00AET/03Shared%20Resources/05ES%20Resources/Textbook%20Materials/NewHorizonElementary/FC%20Pictures/` + source.slice(0, source.length-1);
+          //window.open(redirection)
+          selected = selected ? false : true;
+          vocabularyData.forEach((e) => {
+            if (e.word === word && e.category === category) {
+              e.selected = selected;
+            }
+          });
+          render();
+        });
+      };
+
+      const createCategoryDivs = (e) => {
+        let div = document.createElement("div");
+        div.classList.add("categoryDiv");
+        let catPage = 0;
+        switch (e) {
+          case "lowercase":
+            catPage = 0;
+            break;
+          case "uppercase":
+            catPage = 0;
+            break;
+          case "feel 気分":
+            catPage = 4;
+          case "numbers 数":
+            catPage = 4;
+            break;
+          case "weather 天気":
+            catPage = 5;
+            break;
+          case "colors 色":
+            catPage = 6;
+            break;
+          case "shapes 形":
+            catPage = 6;
+            break;
+          case "sports スポーツ":
+            catPage = 7;
+            break;
+          case "food 食べ物":
+            catPage = 8;
+            break;
+          case "desert デザート":
+            catPage = 9;
+            break;
+          case "drinks 飲み物":
+            catPage = 9;
+            break;
+          case "fruits vegetables 果物 野菜":
+            catPage = 10;
+            break;
+          case "ingredients 食材":
+            catPage = 11;
+            break;
+          case "meals 食事":
+            catPage = 11;
+            break;
+          case "tastes 味など":
+            catPage = 11;
+            break;
+          case "animals 動物":
+            catPage = 12;
+            break;
+          case "nature 自然":
+            catPage = 12;
+            break;
+          case "bugs 虫":
+            catPage = 13;
+            break;
+          case "sea animals 海の生き物":
+            catPage = 13;
+            break;
+          case "dates 日付":
+            catPage = 14;
+            break;
+          case "months 月":
+            catPage = 14;
+            break;
+          case "seasons 季節":
+            catPage = 14;
+            break;
+          case "time of day 一日の時間":
+            catPage = 14;
+            break;
+          case "days 曜日":
+            catPage = 15;
+            break;
+          case "countries 国":
+            catPage = 16;
+            break;
+          case "character 性格など":
+            catPage = 17;
+            break;
+          case "family 家族":
+            catPage = 17;
+            break;
+          case "people 人":
+            catPage = 17;
+            break;
+          case "motion 動作など（１）":
+            catPage = 18;
+            break;
+          case "past したこと":
+            catPage = 18;
+            break;
+          case "motion 動作など（２）":
+            catPage = 19;
+            break;
+          case "daily life 一日の生活":
+            catPage = 20;
+            break;
+          case "frequency 頻度":
+            catPage = 20;
+            break;
+          case "body からだ":
+            catPage = 21;
+            break;
+          case "clothes 衣類":
+            catPage = 21;
+            break;
+          case "buildings 建物など":
+            catPage = 22;
+            break;
+          case "directions 道案内":
+            catPage = 23;
+            break;
+          case "positions 位置":
+            catPage = 23;
+            break;
+          case "vehicles 乗り物":
+            catPage = 23;
+            break;
+          case "school 学校":
+            catPage = 24;
+            break;
+          case "subjects 教科":
+            catPage = 24;
+            break;
+          case "musical instruments 楽器":
+            catPage = 25;
+            break;
+          case "stationery 文房具":
+            catPage = 25;
+            break;
+          case "everyday life 日常生活":
+            catPage = 26;
+            break;
+          case "games 遊びなど":
+            catPage = 27;
+            break;
+          case "school events 学校行事":
+            catPage = 28;
+            break;
+          case "yearly events 年中行事":
+            catPage = 28;
+            break;
+          case "appearance 様子":
+            catPage = 29;
+            break;
+          case "status 状態":
+            catPage = 29;
+            break;
+          case "jobs 職業":
+            catPage = 30;
+            break;
+          case "club activities 部活動":
+            catPage = 31;
+            break;
+          case "special":
+            catPage = 99;
+            break;
+          case "phonics":
+            catPage = 98;
+            break;
+        }
+        div.innerHTML = e + "  " + catPage;
+        categoryOutput.appendChild(div);
+
+        div.addEventListener("click", () => {
+          categoriesState.forEach((f) => {
+            if (f.category === e) {
+              f.isOn = !f.isOn;
+              div.style.backgroundColor = f.isOn ? "lightgreen" : "salmon";
+            }
+          });
+          render();
+        });
+      };
+      categories.map((e) => createCategoryDivs(e));
+
+      const getMeSomeData = () => {
+        let gimmeCategories = ``;
+
+        vocabularyData.forEach(({ category, page }) => {
+          if (!gimmeCategories.includes(category)) {
+            gimmeCategories =
+              gimmeCategories +
+              `{	
+			category: "` +
+              category +
+              `",
+			pageNumber: ` +
+              page +
+              `,
+			},`;
+          }
+        });
+      };
+      getMeSomeData();
+
+      function shuffle(array) {
+        let currentIndex = array.length,
+          randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
+        }
+        return array;
+      }
+
+      const backButtonReturner = () => {
+        let backButton = document.createElement("div");
+        backButton.classList.add("backButton");
+        backButton.classList.add("buttonStyle");
+        backButton.innerHTML = "Back";
+
+        backButton.addEventListener("click", () => {
+          modal.style.display = "none";
+          modal.innerHTML = "";
+          toggleOutline();
+          render();
+        });
+
+        return backButton;
+      };
+
+      const openBingoModal = () => {
+        let bingoCards = [];
+
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            bingoCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+
+        if (bingoCards.length < 9) {
+          alert("Please select at least 9 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "grid";
+          modal.style.gridTemplateColumns = "320px 320px 320px";
+
+          for (let i = 0; i < 12; i++) {
+            let newBingoCard = document.createElement("div");
+            newBingoCard.style.height = "300px";
+            newBingoCard.style.width = "300px";
+            newBingoCard.style.display = "grid";
+            newBingoCard.style.gridTemplateColumns = "100px 100px 100px";
+            newBingoCard.style.border = "1px solid black";
+            newBingoCard.style.margin = "7px 0px 0px 0px";
+
+            let shuffled = shuffle(bingoCards);
+
+            for (j = 0; j < 9; j++) {
+              let picDiv = document.createElement("div");
+              picDiv.style.height = "100px";
+              picDiv.style.width = "100px";
+              picDiv.style.border = "1px solid black";
+              picDiv.style.boxSizing = "border-box";
+
+              let pic = document.createElement("img");
+              pic.src = shuffled[j].source;
+              pic.style.height = "100%";
+              pic.style.width = "100%";
+
+              picDiv.appendChild(pic);
+              newBingoCard.appendChild(picDiv);
+            }
+
+            let backButton = backButtonReturner(modal);
+            modal.appendChild(backButton);
+
+            modal.appendChild(newBingoCard);
+          }
+        }
+      };
+      bingoButton.addEventListener("click", () => {
+        openBingoModal();
+      });
+      //5565
+      const openDartsModal = () => {
+        let dartCards = [];
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            dartCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+
+        if (dartCards.length < 1) {
+          alert("Please select  pictures.");
+        } else {
+          let dartNumbers = dartCards.length;
+          let dartClone = [];
+          if (dartCards.length < 8) {
+            for (let i = 0; i < 8; i++) {
+              dartCards.forEach((f) => {
+                dartClone.push(f);
+              });
+            }
+          }
+          if (dartClone.length > 7) {
+            dartCards = dartClone;
+          }
+
+          toggleOutline();
+          modal.style.display = "inline-block";
+
+          let dartDiv = document.createElement("div");
+          dartDiv.classList.add("dartTarget");
+
+          if (dartNumbers === 4) {
+            dartDiv.style.backgroundImage = "url(images/dartTarget4.png)";
+
+            let dart1 = document.createElement("div");
+            dart1.classList.add("dart2");
+            dart1.style.backgroundImage = "url(" + dartCards[0].source + ")";
+            dart1.style.top = "140px";
+            dart1.style.left = "117px";
+
+            let dart2 = document.createElement("div");
+            dart2.classList.add("dart2");
+            dart2.style.backgroundImage = "url(" + dartCards[1].source + ")";
+            dart2.style.top = "140px";
+            dart2.style.left = "450px";
+
+            let dart3 = document.createElement("div");
+            dart3.classList.add("dart2");
+            dart3.style.backgroundImage = "url(" + dartCards[2].source + ")";
+            dart3.style.top = "450px";
+            dart3.style.left = "450px";
+
+            let dart4 = document.createElement("div");
+            dart4.classList.add("dart2");
+            dart4.style.backgroundImage = "url(" + dartCards[3].source + ")";
+            dart4.style.top = "451px";
+            dart4.style.left = "117px";
+
+            dartDiv.appendChild(dart1);
+            dartDiv.appendChild(dart2);
+            dartDiv.appendChild(dart3);
+            dartDiv.appendChild(dart4);
+          } else if (dartNumbers === 6) {
+            dartDiv.style.backgroundImage = "url(images/dartTarget6.png)";
+
+            let dart1 = document.createElement("div");
+            dart1.classList.add("dart");
+            dart1.style.backgroundImage = "url(" + dartCards[0].source + ")";
+            dart1.style.top = "70px";
+            dart1.style.left = "280px";
+
+            let dart2 = document.createElement("div");
+            dart2.classList.add("dart");
+            dart2.style.backgroundImage = "url(" + dartCards[1].source + ")";
+            dart2.style.top = "200px";
+            dart2.style.left = "500px";
+
+            let dart3 = document.createElement("div");
+            dart3.classList.add("dart");
+            dart3.style.backgroundImage = "url(" + dartCards[2].source + ")";
+            dart3.style.top = "400px";
+            dart3.style.left = "500px";
+
+            let dart4 = document.createElement("div");
+            dart4.classList.add("dart");
+            dart4.style.backgroundImage = "url(" + dartCards[3].source + ")";
+            dart4.style.top = "525px";
+            dart4.style.left = "280px";
+
+            let dart5 = document.createElement("div");
+            dart5.classList.add("dart");
+            dart5.style.backgroundImage = "url(" + dartCards[4].source + ")";
+            dart5.style.top = "200px";
+            dart5.style.left = "70px";
+
+            let dart6 = document.createElement("div");
+            dart6.classList.add("dart");
+            dart6.style.backgroundImage = "url(" + dartCards[5].source + ")";
+            dart6.style.top = "400px";
+            dart6.style.left = "70px";
+
+            dartDiv.appendChild(dart1);
+            dartDiv.appendChild(dart2);
+            dartDiv.appendChild(dart3);
+            dartDiv.appendChild(dart4);
+            dartDiv.appendChild(dart5);
+            dartDiv.appendChild(dart6);
+          } else {
+            let dart1 = document.createElement("div");
+            dart1.classList.add("dart");
+            dart1.style.backgroundImage = "url(" + dartCards[0].source + ")";
+            dart1.style.top = "70px";
+            dart1.style.left = "210px";
+
+            let dart2 = document.createElement("div");
+            dart2.classList.add("dart");
+            dart2.style.backgroundImage = "url(" + dartCards[1].source + ")";
+            dart2.style.top = "70px";
+            dart2.style.left = "350px";
+
+            let dart3 = document.createElement("div");
+            dart3.classList.add("dart");
+            dart3.style.backgroundImage = "url(" + dartCards[2].source + ")";
+            dart3.style.top = "210px";
+            dart3.style.left = "500px";
+
+            let dart4 = document.createElement("div");
+            dart4.classList.add("dart");
+            dart4.style.backgroundImage = "url(" + dartCards[3].source + ")";
+            dart4.style.top = "380px";
+            dart4.style.left = "500px";
+
+            let dart5 = document.createElement("div");
+            dart5.classList.add("dart");
+            dart5.style.backgroundImage = "url(" + dartCards[4].source + ")";
+            dart5.style.top = "510px";
+            dart5.style.left = "350px";
+
+            let dart6 = document.createElement("div");
+            dart6.classList.add("dart");
+            dart6.style.backgroundImage = "url(" + dartCards[5].source + ")";
+            dart6.style.top = "510px";
+            dart6.style.left = "200px";
+
+            let dart7 = document.createElement("div");
+            dart7.classList.add("dart");
+            dart7.style.backgroundImage = "url(" + dartCards[6].source + ")";
+            dart7.style.top = "380px";
+            dart7.style.left = "60px";
+
+            let dart8 = document.createElement("div");
+            dart8.classList.add("dart");
+            dart8.style.backgroundImage = "url(" + dartCards[7].source + ")";
+            dart8.style.top = "210px";
+            dart8.style.left = "60px";
+
+            dartDiv.appendChild(dart1);
+            dartDiv.appendChild(dart2);
+            dartDiv.appendChild(dart3);
+            dartDiv.appendChild(dart4);
+            dartDiv.appendChild(dart5);
+            dartDiv.appendChild(dart6);
+            dartDiv.appendChild(dart7);
+            dartDiv.appendChild(dart8);
+          }
+
+          let backButton = backButtonReturner(modal);
+          modal.appendChild(backButton);
+
+          modal.appendChild(dartDiv);
+        }
+      };
+      dartsButton.addEventListener("click", () => {
+        openDartsModal();
+      });
+
+      const openConnectFourModal = () => {
+        let connectFourCards = [];
+
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            connectFourCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+
+        if (connectFourCards.length < 8) {
+          alert("Please select at least 8 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "grid";
+          modal.style.gridTemplateColumns = "700px";
+
+          let newConnectFourCard = document.createElement("div");
+          newConnectFourCard.style.height = "500px";
+          newConnectFourCard.style.width = "500px";
+          newConnectFourCard.style.display = "grid";
+          newConnectFourCard.style.gridTemplateColumns =
+            "100px 100px 100px 100px 100px";
+          newConnectFourCard.style.border = "1px solid black";
+          newConnectFourCard.style.margin = "47px 0px 0px 20px";
+
+          let shuffledOne = shuffle(connectFourCards);
+          let shuffledTwo = shuffledOne.concat(connectFourCards);
+          let shuffledThree = shuffledTwo.concat(connectFourCards);
+          let shuffled = shuffledThree.concat(connectFourCards);
+
+          for (j = 0; j < 25; j++) {
+            let picDiv = document.createElement("div");
+            picDiv.style.height = "100px";
+            picDiv.style.width = "100px";
+            picDiv.style.border = "1px solid black";
+            picDiv.style.boxSizing = "border-box";
+            let pic = document.createElement("img");
+            pic.src = shuffled[j].source;
+
+            pic.style.height = "100%";
+            pic.style.width = "100%";
+
+            picDiv.appendChild(pic);
+            newConnectFourCard.appendChild(picDiv);
+          }
+
+          let backButton = backButtonReturner();
+          modal.appendChild(backButton);
+          modal.appendChild(newConnectFourCard);
+        }
+      };
+      connectFourButton.addEventListener("click", () => {
+        openConnectFourModal();
+      });
+
+      const openSugurokuModal = () => {
+        let dartCards = [];
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            dartCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+
+        if (dartCards.length < 4) {
+          alert("Please select at least 4 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "inline-block";
+
+          while (dartCards.length < 20) {
+            dartCards = dartCards.concat(dartCards);
+          }
+
+          let dart1 = document.createElement("div");
+          dart1.classList.add("suguroku");
+          dart1.style.backgroundImage = "url(" + dartCards[0].source + ")";
+          dart1.style.top = "70px";
+          dart1.style.left = "200px";
+
+          let dart2 = document.createElement("div");
+          dart2.classList.add("suguroku");
+          dart2.style.backgroundImage = "url(" + dartCards[1].source + ")";
+          dart2.style.top = "70px";
+          dart2.style.left = "330px";
+
+          let dart3 = document.createElement("div");
+          dart3.classList.add("suguroku");
+          dart3.style.backgroundImage = "url(" + dartCards[2].source + ")";
+          dart3.style.top = "70px";
+          dart3.style.left = "450px";
+
+          let dart4 = document.createElement("div");
+          dart4.classList.add("suguroku");
+          dart4.style.backgroundImage = "url(" + dartCards[3].source + ")";
+          dart4.style.top = "70px";
+          dart4.style.left = "600px";
+
+          let dart5 = document.createElement("div");
+          dart5.classList.add("suguroku");
+          dart5.style.backgroundImage = "url(" + dartCards[4].source + ")";
+          dart5.style.top = "95px";
+          dart5.style.left = "750px";
+          dart5.style.transform = "rotate(15deg)";
+
+          let dart6 = document.createElement("div");
+          dart6.classList.add("suguroku");
+          dart6.style.backgroundImage = "url(" + dartCards[5].source + ")";
+          dart6.style.top = "190px";
+          dart6.style.left = "840px";
+          dart6.style.transform = "rotate(358deg)";
+
+          let dart7 = document.createElement("div");
+          dart7.classList.add("suguroku");
+          dart7.style.backgroundImage = "url(" + dartCards[6].source + ")";
+          dart7.style.top = "300px";
+          dart7.style.left = "840px";
+
+          let dart8 = document.createElement("div");
+          dart8.classList.add("suguroku");
+          dart8.style.backgroundImage = "url(" + dartCards[7].source + ")";
+          dart8.style.top = "435px";
+          dart8.style.left = "800px";
+          dart8.style.transform = "rotate(355deg)";
+
+          let dart9 = document.createElement("div");
+          dart9.classList.add("suguroku");
+          dart9.style.backgroundImage = "url(" + dartCards[8].source + ")";
+          dart9.style.top = "425px";
+          dart9.style.left = "670px";
+          dart9.style.transform = "rotate(15deg)";
+
+          let dart10 = document.createElement("div");
+          dart10.classList.add("suguroku");
+          dart10.style.backgroundImage = "url(" + dartCards[9].source + ")";
+          dart10.style.top = "365px";
+          dart10.style.left = "550px";
+          dart10.style.transform = "rotate(25deg)";
+
+          let dart11 = document.createElement("div");
+          dart11.classList.add("suguroku");
+          dart11.style.backgroundImage = "url(" + dartCards[10].source + ")";
+          dart11.style.top = "317px";
+          dart11.style.left = "435px";
+          dart11.style.transform = "rotate(15deg)";
+
+          let dart12 = document.createElement("div");
+          dart12.classList.add("suguroku");
+          dart12.style.backgroundImage = "url(" + dartCards[11].source + ")";
+          dart12.style.top = "292px";
+          dart12.style.left = "300px";
+
+          let dart13 = document.createElement("div");
+          dart13.classList.add("suguroku");
+          dart13.style.backgroundImage = "url(" + dartCards[12].source + ")";
+          dart13.style.top = "282px";
+          dart13.style.left = "170px";
+
+          let dart14 = document.createElement("div");
+          dart14.classList.add("suguroku");
+          dart14.style.backgroundImage = "url(" + dartCards[13].source + ")";
+          dart14.style.top = "390px";
+          dart14.style.left = "75px";
+
+          let dart15 = document.createElement("div");
+          dart15.classList.add("suguroku");
+          dart15.style.backgroundImage = "url(" + dartCards[14].source + ")";
+          dart15.style.top = "490px";
+          dart15.style.left = "77px";
+          dart15.style.transform = "rotate(355deg)";
+
+          let dart16 = document.createElement("div");
+          dart16.classList.add("suguroku");
+          dart16.style.backgroundImage = "url(" + dartCards[15].source + ")";
+          dart16.style.top = "575px";
+          dart16.style.left = "190px";
+
+          let dart17 = document.createElement("div");
+          dart17.classList.add("suguroku");
+          dart17.style.backgroundImage = "url(" + dartCards[16].source + ")";
+          dart17.style.top = "575px";
+          dart17.style.left = "300px";
+
+          let dart18 = document.createElement("div");
+          dart18.classList.add("suguroku");
+          dart18.style.backgroundImage = "url(" + dartCards[17].source + ")";
+          dart18.style.top = "575px";
+          dart18.style.left = "450px";
+
+          let dart19 = document.createElement("div");
+          dart19.classList.add("suguroku");
+          dart19.style.backgroundImage = "url(" + dartCards[18].source + ")";
+          dart19.style.top = "585px";
+          dart19.style.left = "600px";
+          dart19.style.transform = "rotate(5deg)";
+
+          let dart20 = document.createElement("div");
+          dart20.classList.add("suguroku");
+          dart20.style.backgroundImage = "url(" + dartCards[19].source + ")";
+          dart20.style.top = "599px";
+          dart20.style.left = "715px";
+          dart20.style.transform = "rotate(7deg)";
+
+          let dartDiv = document.createElement("div");
+          dartDiv.classList.add("sugurokuTarget");
+
+          dartDiv.appendChild(dart1);
+          dartDiv.appendChild(dart2);
+          dartDiv.appendChild(dart3);
+          dartDiv.appendChild(dart4);
+          dartDiv.appendChild(dart5);
+          dartDiv.appendChild(dart6);
+          dartDiv.appendChild(dart7);
+          dartDiv.appendChild(dart8);
+          dartDiv.appendChild(dart9);
+          dartDiv.appendChild(dart10);
+          dartDiv.appendChild(dart11);
+          dartDiv.appendChild(dart12);
+          dartDiv.appendChild(dart13);
+          dartDiv.appendChild(dart14);
+          dartDiv.appendChild(dart15);
+          dartDiv.appendChild(dart16);
+          dartDiv.appendChild(dart17);
+          dartDiv.appendChild(dart18);
+          dartDiv.appendChild(dart19);
+          dartDiv.appendChild(dart20);
+
+          let backButton = backButtonReturner();
+          modal.appendChild(backButton);
+
+          modal.appendChild(dartDiv);
+        }
+      };
+      sugurokuButton.addEventListener("click", () => {
+        openSugurokuModal();
+      });
+      //6000
+      const openBattleShipModal = () => {
+        let battleShipCards = [];
+
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            battleShipCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+              battleShipSelected: false,
+            });
+          }
+        });
+
+        if (battleShipCards.length < 8 || battleShipCards.length > 8) {
+          alert("Please select 8 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "grid";
+          modal.style.gridTemplateColumns = "320px 320px 320px";
+
+          let battleShipToolBar = document.createElement("div");
+          battleShipToolBar.classList.add("battleShipToolBar");
+
+          let battleShipCardsSorted = [];
+          battleShipCards.forEach((e) => {
+            battleShipCardsSorted.push({ ...e });
+          });
+
+          battleShipCards.forEach((e) => {
+            let battleCard = document.createElement("div");
+            battleCard.classList.add("dataDiv");
+            battleCard.style.backgroundImage = "url(" + e.source + ")";
+            battleShipToolBar.appendChild(battleCard);
+
+            battleCard.addEventListener("click", () => {
+              battleShipCardsSorted.forEach((f) => {
+                if (f.source === "") {
+                  f.source = e.source;
+                }
+              });
+              renderBattleField();
+              console.log(battleShipCards);
+            });
+          });
+          let battleField = document.createElement("div");
+          battleField.classList.add("battleField");
+
+          const renderBattleField = () => {
+            battleField.innerHTML = "";
+            for (let i = 0; i < 25; i++) {
+              let battleFieldCard = document.createElement("div");
+              battleFieldCard.classList.add("battleFieldCard");
+
+              if (i === 0) {
+                battleFieldCard.style.backgroundColor = "lightgrey";
+                let battleFieldInput = document.createElement("textarea");
+                battleFieldInput.style.border = "none";
+                battleFieldInput.style.height = "100%";
+                battleFieldInput.style.width = "100px";
+                battleFieldInput.style.resize = "none";
+                battleFieldInput.style.fontSize = "30px";
+                battleFieldInput.style.wordWrap = "break-word";
+                battleFieldCard.appendChild(battleFieldInput);
+              }
+
+              if (i === 1) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[0].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[0].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 2) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[1].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[1].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 3) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[2].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[2].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 4) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[3].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[3].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 5) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[4].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[4].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 10) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[5].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[5].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 15) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[6].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[6].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+              if (i === 20) {
+                battleFieldCard.style.backgroundImage =
+                  "url(" + battleShipCardsSorted[7].source + ")";
+                battleFieldCard.addEventListener("click", () => {
+                  battleShipCardsSorted[7].source = "";
+                  battleFieldCard.style.border = "5px solid red";
+                });
+              }
+
+              battleField.appendChild(battleFieldCard);
+            }
+
+            modal.appendChild(battleField);
+          };
+
+          let backButton = backButtonReturner();
+          modal.appendChild(backButton);
+
+          modal.appendChild(battleShipToolBar);
+          renderBattleField();
+        }
+      };
+      battleShipButton.addEventListener("click", () => {
+        openBattleShipModal();
+      });
+
+      const wordSearchCreate = () => {
+        let wordSearchCards = [];
+
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            wordSearchCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+
+        if (wordSearchCards.length < 4) {
+          alert("Please select at least 4 pictures.");
+        } else if (wordSearchCards.length > 30) {
+          alert("Please select less than 30 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "grid";
+          modal.style.gridTemplateColumns = "320px 320px 320px";
+          modal.style.paddingTop = "100px";
+
+          let gameDiv = document.createElement("div");
+          gameDiv.classList.add("game");
+          modal.appendChild(gameDiv);
+          let answerBox = document.createElement("div");
+          answerBox.classList.add("answerBox");
+          modal.appendChild(answerBox);
+          let gameDiv2 = document.createElement("div");
+          gameDiv2.classList.add("game2");
+          modal.appendChild(gameDiv2);
+
+          let answerBox2 = document.createElement("div");
+          answerBox2.classList.add("answerBox2");
+          modal.appendChild(answerBox2);
+
+          const wordsInput = [];
+
+          wordSearchCards.forEach((e) => {
+            wordsInput.push(e.word);
+          });
+
+          const colors = [
+            "#FF9999",
+            "#FF9966",
+            "#FFFF99",
+            "#99FF99",
+            "#66CCFF",
+            "#9999FF",
+
+            "#FF6666",
+            "#FF6633",
+            "#FFFF66",
+            "#66FF66",
+            "#66CCCC",
+            "#9966FF",
+
+            "#CC3333",
+            "#FF6600",
+            "#FFFF33",
+            "#00FF00",
+            "#3366FF",
+            "#9933FF",
+
+            "#FF0000",
+            "#FF3300",
+            "#FFFF00",
+            "#00CC00",
+            "#0000FF",
+            "#9900CC",
+
+            "#CC0000",
+            "#CC3300",
+            "#FFCC00",
+            "#009900",
+            "#0000CC",
+            "#663399",
+
+            "#990000",
+            "#993300",
+            "#CC9900",
+            "#006600",
+            "#000099",
+            "#660099",
+          ];
+          let currentColor = 0;
+
+          let wordsArray = [];
+
+          const upperCaseEachWord = () => {
+            wordsInput.forEach((e) => {
+              wordsArray.push(e.toUpperCase());
+            });
+          };
+
+          upperCaseEachWord();
+
+          const wordBoxArray = [];
+
+          let horizontalPlacementArray = [];
+          let verticalPlacementArray = [];
+          let diagonalPlacementArray = [];
+          let diagonalOppositePlacementArray = [];
+
+          const sortingHat = () => {
+            let sortingNumber = 0;
+            wordsArray.forEach((e) => {
+              switch (sortingNumber) {
+                case 0:
+                  horizontalPlacementArray.push(e);
+                  break;
+                case 1:
+                  verticalPlacementArray.push(e);
+                  break;
+                case 2:
+                  diagonalPlacementArray.push(e);
+                  break;
+                case 3:
+                  horizontalPlacementArray.push(e.split("").reverse().join(""));
+                  break;
+                case 4:
+                  verticalPlacementArray.push(e.split("").reverse().join(""));
+                  break;
+                case 5:
+                  diagonalPlacementArray.push(e.split("").reverse().join(""));
+                  break;
+              }
+
+              sortingNumber++;
+              if (sortingNumber === 6) {
+                sortingNumber = 0;
+              }
+            });
+          };
+          sortingHat();
+
+          let longestWord = "none";
+
+          const findLongestWord = () => {
+            wordsArray.forEach((e) => {
+              if (e.length >= longestWord.length) {
+                longestWord = e;
+              }
+            });
+          };
+          findLongestWord();
+
+          let dimensionSide =
+            longestWord.length * 2 > wordsInput.length
+              ? longestWord.length * 2
+              : wordsInput.length;
+
+          let gridArray = [];
+
+          let dimension = dimensionSide * dimensionSide;
+          const createSkeletonGrid = () => {
+            for (let i = 0; i < dimension; i++) {
+              gridArray.push({
+                letter: "",
+                key: i,
+                color: "white",
+              });
+            }
+          };
+          createSkeletonGrid();
+
+          let horizontalKeyInputArray = [];
+          const placeHorizontal = () => {
+            let startingPoint = 0;
+            let startingPoints = [];
+            let alreadyTaken = [];
+            horizontalPlacementArray.forEach((e) => {
+              let possibles = [];
+              for (let i = 0; i < dimension; i++) {
+                if (e.length <= dimensionSide - (i % dimensionSide)) {
+                  possibles.push(i);
+                }
+              }
+              let newPossibles = [];
+              possibles.forEach((f) => {
+                let clear = true;
+                startingPoints.forEach((g) => {
+                  if (f === g) {
+                    clear = false;
+                  }
+                  for (let i = 0; i < longestWord.length; i++) {
+                    if (f === g + i) {
+                      clear = false;
+                    }
+                  }
+                  for (let i = 1; i < e.length; i++) {
+                    if (f === g - i) {
+                      clear = false;
+                    }
+                  }
+                });
+
+                if (clear) {
+                  newPossibles.push(f);
+                }
+              });
+
+              let randomNum = Math.floor(Math.random() * newPossibles.length);
+              startingPoints.push(newPossibles[randomNum]);
+            });
+
+            horizontalPlacementArray.forEach((e, index) => {
+              let startAt = startingPoints[index];
+
+              e.split("").forEach((f, ind) => {
+                horizontalKeyInputArray.push({
+                  letter: f,
+                  key: startAt + ind,
+                  color: colors[currentColor],
+                });
+              });
+              wordBoxArray.push({
+                word: e,
+                color: colors[currentColor],
+              });
+              currentColor++;
+            });
+
+            horizontalKeyInputArray.forEach((e) => {
+              gridArray.forEach((f) => {
+                if (f.key === e.key) {
+                  (f.letter = e.letter), (f.color = e.color);
+                }
+              });
+            });
+          };
+          placeHorizontal();
+
+          const ALPHABET = [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+          ];
+          const createBoxes = () => {
+            gridArray.forEach((e) => {
+              let div = document.createElement("div");
+              div.innerHTML = e.letter;
+              div.style.fontSize = 700 / dimensionSide / 1.5 + "px";
+              if (e.letter != "") {
+                div.style.backgroundColor = "white";
+              } else {
+                div.innerHTML =
+                  ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+              }
+              div.style.backgroundColor = "white";
+              div.style.height = 700 / dimensionSide + "px";
+              div.style.width = 700 / dimensionSide + "px";
+
+              div.style.lineHeight = 700 / dimensionSide + "px";
+              gameDiv.appendChild(div);
+            });
+            gridArray.forEach((e) => {
+              let div = document.createElement("div");
+              div.innerHTML = e.letter;
+              div.style.fontSize = 700 / dimensionSide / 1.5 + "px";
+              if (e.letter != "") {
+                div.style.backgroundColor = e.color;
+              } else {
+                div.innerHTML = e.key;
+                div.style.fontSize = 700 / dimensionSide / 3 + "px";
+              }
+
+              div.style.height = 700 / dimensionSide + "px";
+              div.style.width = 700 / dimensionSide + "px";
+
+              div.style.lineHeight = 700 / dimensionSide + "px";
+              gameDiv2.appendChild(div);
+            });
+          };
+          gameDiv.style.gridTemplateColumns =
+            "repeat(" + dimensionSide + ", auto)";
+          gameDiv2.style.gridTemplateColumns =
+            "repeat(" + dimensionSide + ", auto)";
+
+          //188
+          let verticalKeyInputArray = [];
+
+          const placeVertical = () => {
+            verticalPlacementArray.forEach((f) => {
+              let possibles = [];
+              let newPossibles = [];
+
+              for (let i = 0; i < gridArray.length; i++) {
+                let willItPass = true;
+                if (
+                  gridArray[i].letter === "" ||
+                  gridArray[i].letter === f.split("")[0]
+                ) {
+                  willItPass = true;
+                } else {
+                  willItPass = false;
+                }
+
+                if (
+                  f.split("").length * dimensionSide - f.split("").length + i >
+                  dimension
+                ) {
+                  willItPass = false;
+                }
+                if (willItPass) {
+                  possibles.push(gridArray[i]);
+                }
+              }
+              possibles.forEach((h) => {
+                let willItPass = true;
+
+                f.split("").forEach((g, ind) => {
+                  if (gridArray[h.key + dimensionSide * ind].letter === "") {
+                  } else if (
+                    gridArray[h.key + dimensionSide * ind].letter === g
+                  ) {
+                  } else {
+                    willItPass = false;
+                  }
+                });
+                if (willItPass) {
+                  newPossibles.push(h);
+                }
+              });
+
+              let selected =
+                newPossibles[Math.floor(Math.random() * newPossibles.length)];
+              f.split("").forEach((g, ind) => {
+                gridArray[selected.key + dimensionSide * ind].letter = g;
+                gridArray[selected.key + dimensionSide * ind].color =
+                  colors[currentColor];
+              });
+              wordBoxArray.push({
+                word: f,
+                color: colors[currentColor],
+              });
+              currentColor++;
+            });
+          };
+          placeVertical();
+
+          const placeDiagonal = () => {
+            diagonalPlacementArray.forEach((f) => {
+              let possibles = [];
+              let newPossibles = [];
+              for (let i = 0; i < gridArray.length; i++) {
+                let willItPass = true;
+                if (
+                  gridArray[i].letter === "" ||
+                  gridArray[i].letter === f.split("")[0]
+                ) {
+                  willItPass = true;
+                } else {
+                  willItPass = false;
+                }
+                if (f.length > dimensionSide - (i % dimensionSide)) {
+                  willItPass = false;
+                }
+
+                if (
+                  f.split("").length * dimensionSide - f.split("").length + i >
+                  dimension
+                ) {
+                  willItPass = false;
+                }
+                if (willItPass) {
+                  possibles.push(gridArray[i]);
+                }
+              }
+              possibles.forEach((h) => {
+                let willItPass = true;
+
+                f.split("").forEach((g, ind) => {
+                  if (
+                    gridArray[h.key + dimensionSide * ind + ind].letter === ""
+                  ) {
+                  } else if (
+                    gridArray[h.key + dimensionSide * ind + ind].letter === g
+                  ) {
+                  } else {
+                    willItPass = false;
+                  }
+                });
+                if (willItPass) {
+                  newPossibles.push(h);
+                }
+              });
+              let selected =
+                newPossibles[Math.floor(Math.random() * newPossibles.length)];
+              f.split("").forEach((g, ind) => {
+                gridArray[selected.key + dimensionSide * ind + ind].letter = g;
+                gridArray[selected.key + dimensionSide * ind + ind].color =
+                  colors[currentColor];
+              });
+              wordBoxArray.push({
+                word: f,
+                color: colors[currentColor],
+              });
+              currentColor++;
+            });
+          };
+          placeDiagonal();
+
+          createBoxes();
+
+          wordBoxArray.forEach((e) => {
+            let p = document.createElement("p");
+            let itsFlipped = true;
+
+            wordsArray.forEach((f) => {
+              if (e.word === f) {
+                itsFlipped = false;
+              }
+            });
+            let pText = itsFlipped
+              ? document.createTextNode(e.word.split("").reverse().join(""))
+              : document.createTextNode(e.word);
+            let pText2 = itsFlipped
+              ? document.createTextNode(e.word.split("").reverse().join(""))
+              : document.createTextNode(e.word);
+
+            p.style.textShadow = "0px 0px 5px white";
+            p.style.color = "black";
+            p.style.backgroundColor = e.color;
+            p.appendChild(pText);
+            answerBox2.appendChild(p);
+
+            let p2 = document.createElement("p");
+            p2.style.color = "black";
+            p2.appendChild(pText2);
+            answerBox.appendChild(p2);
+          });
+          answerBox2.style.backgroundColor = "white";
+          modal.style.display = "grid";
+          modal.style.gridTemplateColumns = "100%";
+
+          let backButton = backButtonReturner();
+          modal.appendChild(backButton);
+        }
+      };
+
+      wordSearchButton.addEventListener("click", () => {
+        wordSearchCreate();
+      });
+
+      let cardsTotal = 0;
+
+      const openCardsModal = () => {
+        let cardsCards = [];
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            cardsCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+        cardsTotal = cardsCards.length;
+
+        if (cardsCards.length > 12) {
+          alert("Please select less than 13 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "inline-block";
+
+          let boxOutline = document.createElement("div");
+          boxOutline.classList.add("boxOutline");
+
+          const boxes = document.createElement("div");
+          boxes.classList.add("boxes");
+
+          cardsCards.forEach((e) => {
+            let div = document.createElement("div");
+            div.style.cursor = "pointer";
+            div.classList.add("box");
+            let img = document.createElement("img");
+            img.src = e.source;
+            div.appendChild(img);
+            boxes.appendChild(div);
+            div.addEventListener("click", () => {
+              if (cardsTotal < 12) {
+                let div2 = document.createElement("div");
+                div2.classList.add("box");
+                let img2 = document.createElement("img");
+                img2.src = e.source;
+                div2.appendChild(img2);
+                boxes.appendChild(div2);
+                cardsTotal++;
+              }
+            });
+          });
+
+          boxOutline.appendChild(boxes);
+          modal.appendChild(boxOutline);
+
+          let backButton = backButtonReturner();
+
+          modal.appendChild(backButton);
+        }
+      };
+      cardsButton.addEventListener("click", () => {
+        openCardsModal();
+      });
+
+      const openAorBModal = () => {
+        let AorBCards = [];
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            AorBCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+        cardsTotal = AorBCards.length;
+
+        if (AorBCards.length < 5) {
+          alert("Please select at least 5 pictures.");
+        } else {
+          toggleOutline();
+          modal.style.display = "inline-block";
+
+          if (AorBCards.length < 10) {
+            if (cardsTotal % 2 !== 0) {
+              for (let i = 0; i <= 10; i++) {
+                AorBCards.push(AorBCards[i]);
+              }
+            } else {
+              AorBCards.push(AorBCards[0]);
+              AorBCards.push(AorBCards[2]);
+              AorBCards.push(AorBCards[1]);
+              AorBCards.push(AorBCards[4]);
+            }
+          }
+          console.log(AorBCards);
+
+          let gameDiv = document.createElement("div");
+          gameDiv.style.border = "1px solid black";
+          gameDiv.style.width = "700px";
+          gameDiv.style.height = "375px";
+          gameDiv.style.margin = "40px";
+          gameDiv.style.display = "grid";
+          gameDiv.style.padding = "25px";
+          gameDiv.style.gridTemplateColumns = "350px 350px";
+
+          for (let i = 0; i < 5; i++) {
+            let round = document.createElement("div");
+            round.style.border = "4px solid black";
+            round.style.width = "330px";
+            round.style.height = "110px";
+            round.style.justifySelf = "center";
+            round.style.display = "grid";
+            round.style.gridTemplateColumns = "26px 100px 100px 100px";
+            round.style.boxSizing = "border-box";
+            round.style.borderRadius = "12px";
+            round.style.padding = "2px";
+
+            let roundNumber = document.createElement("div");
+            roundNumber.innerHTML = i + 1;
+            roundNumber.style.justifySelf = "center";
+            roundNumber.style.fontSize = "20px";
+            roundNumber.style.marginTop = "40px";
+            round.appendChild(roundNumber);
+            let imgOne = document.createElement("img");
+            imgOne.src = AorBCards[i * 2].source;
+            imgOne.style.height = "90px";
+            imgOne.style.width = "90px";
+            imgOne.style.margin = "2px 0px 0px 0px";
+            imgOne.style.justifySelf = "center";
+            imgOne.style.border = "2px solid black";
+            imgOne.style.borderRadius = "6px";
+            round.appendChild(imgOne);
+            let imgTwo = document.createElement("img");
+            imgTwo.src = AorBCards[i * 2 + 1].source;
+            imgTwo.style.height = "90px";
+            imgTwo.style.width = "90px";
+            imgTwo.style.margin = "2px 0px 0px 0px";
+            imgTwo.style.border = "2px solid black";
+            imgTwo.style.justifySelf = "center";
+            imgTwo.style.borderRadius = "6px";
+            round.appendChild(imgTwo);
+            let scoreCircle = document.createElement("div");
+            scoreCircle.style.borderRadius = "50%";
+            scoreCircle.style.border = "2px solid black";
+            scoreCircle.style.height = "80px";
+            scoreCircle.style.width = "80px";
+            scoreCircle.style.margin = "8px 0px 0px 0px";
+            scoreCircle.style.justifySelf = "center";
+            round.appendChild(scoreCircle);
+
+            gameDiv.appendChild(round);
+          }
+          let totalRound = document.createElement("div");
+          totalRound.style.border = "4px solid black";
+          totalRound.style.width = "330px";
+          totalRound.style.height = "110px";
+          totalRound.style.justifySelf = "center";
+          totalRound.style.boxSizing = "border-box";
+          totalRound.innerHTML = "SCORE:";
+          totalRound.style.padding = "25px 0px 0px 10px";
+          totalRound.style.fontSize = "45px";
+          totalRound.style.borderRadius = "12px";
+          gameDiv.appendChild(totalRound);
+
+          let backButton = backButtonReturner();
+          modal.appendChild(gameDiv);
+          modal.appendChild(backButton);
+        }
+      };
+      AorBButton.addEventListener("click", () => {
+        openAorBModal();
+      });
+
+      const openGuessWhoModal = () => {
+        let guessWhoCards = [];
+        vocabularyData.map((e) => {
+          if (e.selected) {
+            let newCat = e.category.replaceAll(" ", "%20");
+            let newWord = e.word.replaceAll(" ", "%20");
+            let source = isCutouts
+              ? e.page + "%20" + newCat + "/cutouts/" + newWord + ".PNG"
+              : e.page + "%20" + newCat + "/" + newWord + ".PNG";
+            guessWhoCards.push({
+              word: e.word,
+              Japanese: e.Japanese,
+              category: e.category,
+              page: e.page,
+              selected: true,
+              source: source,
+            });
+          }
+        });
+
+        if (guessWhoCards.length < 1) {
+          alert("Please select at least 1 picture.");
+        } else {
+          toggleOutline();
+          modal.style.display = "inline-block";
+
+          const renderGuessWho = (columns, rows) => {
+            modal.innerHTML = "";
+
+            let selectedSource = "";
+
+            const guessWhoToolBar = document.createElement("div");
+            guessWhoToolBar.style.width = "78vw";
+            guessWhoToolBar.style.borderBottom = "5px dashed black";
+
+            const imageReturner = (source) => {
+              let img = document.createElement("img");
+              img.style.height = "100px";
+              img.style.width = "100px";
+              img.style.cursor = "pointer";
+              img.src = source;
+              img.style.border =
+                source === selectedSource ? "3px solid red" : "none";
+              img.style.borderRadius =
+                source === selectedSource ? "8px" : "none";
+              img.style.boxSizing = "border-box";
+              guessWhoToolBar.appendChild(img);
+              img.addEventListener("click", () => {
+                selectedSource = source;
+                renderToolBar();
+              });
+            };
+            const renderToolBar = () => {
+              guessWhoToolBar.innerHTML = "";
+              guessWhoCards.map(({ source }) => {
+                imageReturner(source);
+              });
+            };
+            renderToolBar();
+
+            const guessWhoHolder = document.createElement("div");
+            guessWhoHolder.style.margin = "3vh 0px 0px 5vw";
+            guessWhoHolder.style.border = "1px solid black";
+            guessWhoHolder.style.width = columns * 100 + "px";
+            guessWhoHolder.style.display = "grid";
+            guessWhoHolder.style.gridTemplateColumns =
+              "repeat(" + columns + ", 100px)";
+
+            for (let i = 0; i < rows * columns; i++) {
+              let imgDiv = document.createElement("div");
+              imgDiv.style.height = "98px";
+              imgDiv.style.width = "98px";
+              imgDiv.style.cursor = "pointer";
+              imgDiv.style.border = "1px solid black";
+              imgDiv.style.backgroundSize = "100% 100%";
+              imgDiv.style.backgroundRepeat = "no-repeat";
+              imgDiv.addEventListener("click", () => {
+                imgDiv.style.backgroundImage = "url(" + selectedSource + ")";
+                console.log(selectedSource);
+              });
+              guessWhoHolder.appendChild(imgDiv);
+            }
+
+            modal.appendChild(guessWhoToolBar);
+            modal.appendChild(guessWhoHolder);
+            let backButton = backButtonReturner();
+            modal.appendChild(backButton);
+          };
+
+          const prompt = () => {
+            const columnsInput = document.createElement("input");
+            columnsInput.placeholder = "How many columns?";
+            columnsInput.style.position = "fixed";
+            columnsInput.style.top = "25vh";
+            columnsInput.style.height = "10vh";
+            columnsInput.style.width = "50vw";
+            columnsInput.style.left = "25vw";
+            columnsInput.style.textAlign = "center";
+            const rowsInput = document.createElement("input");
+            rowsInput.style.position = "fixed";
+            rowsInput.style.top = "36vh";
+            rowsInput.style.height = "10vh";
+            rowsInput.style.width = "50vw";
+            rowsInput.style.left = "25vw";
+            rowsInput.style.textAlign = "center";
+            rowsInput.placeholder = "How many rows?";
+            const submit = document.createElement("button");
+            submit.classList.add("buttonStyle");
+            submit.style.position = "fixed";
+            submit.style.top = "47vh";
+            submit.style.height = "10vh";
+            submit.style.width = "20vw";
+            submit.style.left = "40vw";
+            submit.style.textAlign = "center";
+
+            submit.innerHTML = "Enter";
+            submit.addEventListener("click", () => {
+              renderGuessWho(columnsInput.value, rowsInput.value);
+            });
+            modal.appendChild(columnsInput);
+            modal.appendChild(rowsInput);
+            modal.appendChild(submit);
+            let backButton = backButtonReturner();
+            modal.appendChild(backButton);
+          };
+          prompt();
+        }
+      };
+      guessWhoButton.addEventListener("click", () => {
+        openGuessWhoModal();
+      });
+    </script>
+  </body>
+</html>
